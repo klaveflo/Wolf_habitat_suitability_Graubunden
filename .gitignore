@@ -1,0 +1,13 @@
+# data folder
+data/
+
+# outputs folder
+output/
+
+# word files
+*.docx
+*.doc
+
+# powerpoint files
+*.pptx
+*.ppt
