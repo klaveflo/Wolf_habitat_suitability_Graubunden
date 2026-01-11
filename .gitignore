@@ -11,3 +11,6 @@ output/
 # powerpoint files
 *.pptx
 *.ppt
+
+/.quarto/
+**/*.quarto_ipynb
