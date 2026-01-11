@@ -1,2 +1,7 @@
-# wolf_habitat_graubunden
-Wolf habitat suitability modelling with potential conflict zones
+# Wolf habitat suitability Analysis for the Canton Graubünden, Switzerland
+**Author:** Florian Klaver
+
+## General Information
+
+
+## Usage
