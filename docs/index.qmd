@@ -1,0 +1,162 @@
+---
+title: "Satellite-Based Monitoring of Grassland Management"
+subtitle: "Detecting Mowing Events on Airport Areas Using Machine Learning"
+institut: "Institute for Environment and Natural Resources"
+keywords: "Machine Learning, Remote Sensing, Sentinel-2, Vegetation Indices, Mowing Detection, Airport Management"
+lang: en
+confidential: false
+cover-image:
+  src: images/cover.png
+  max-width: 100%
+  max-height: 5cm
+thesis-type: "Project Work 2"
+degree-type: "Bachelor's degree programme"
+study-year: "2023"
+submission-date: "2025-12-11"
+study-direction: "Applied Digital Life Sciences"
+supervisors:
+  - title: ""
+    name: "Nils Ratnaweera"
+    affiliation: "ZHAW Life Sciences and Facility Management, Wädenswil"
+bibliography: references.bib
+author: 
+  - Florian Klaver
+format: 
+  zhaw-lsfm-typst: default
+  zhaw-lsfm-html:
+    theme: cosmo
+    embed-resources: true
+    echo: false
+    toc: true
+    toc-depth: 3
+    number-sections: true
+    code-fold: true
+---
+
+
+# Abstract {.unnumbered .unlisted}
+
+
+
+# Zusammenfassung {.unnumbered .unlisted}
+
+
+
+# Acknowledgements {.unnumbered .unlisted}
+
+I would like to thank my supervisor Nils Ratnaweera for his guidance and feedback throughout this project. I am also very grateful to the Airport Zürich and the ZHAW research group from the Institute for Environment and Natural Resources for providing the necessary data used in this study. Finally, I would like to acknowledge the use of AI-based tools, which helped fixing and debugging problems in the code as well as refine text.
+
+
+
+::: {.content-hidden when-format="html"}
+
+# Table of contents {.unnumbered .unlisted}
+
+{{< table-of-contents >}}
+
+:::
+
+
+# List of abbreviations {.unnumbered}
+
+
++---------+----------------------------------+
+| VI      | Vegetation Index                 |
++---------+----------------------------------+
+| NDVI    | Normalized Difference Vegetation Index |
++---------+----------------------------------+
+| GNDVI   | Green Normalized Difference Vegetation Index |
++---------+----------------------------------+
+| EVI     | Enhanced Vegetation Index        |
++---------+----------------------------------+
+| SAVI    | Soil-Adjusted Vegetation Index   |
++---------+----------------------------------+
+| NDII    | Normalized Difference Infrared Index |
++---------+----------------------------------+
+| NIR     | Near-Infrared                    |
++---------+----------------------------------+
+| SWIR    | Short-Wave Infrared              |
++---------+----------------------------------+
+| SAR     | Synthetic Aperture Radar         |
++---------+----------------------------------+
+| ML      | Machine Learning                 |
++---------+----------------------------------+
+| RF      | Random Forest                    |
++---------+----------------------------------+
+| LGBM    | Light Gradient Boosting Machine  |
++---------+----------------------------------+
+| SVM     | Support Vector Machine           |
++---------+----------------------------------+
+
+
+
+# Introduction
+
+
+
+
+
+## Problem Statement and Research Gap
+
+
+## Goal
+
+
+
+
+# Methods
+
+## Study Area and Data Description
+### Study area
+
+
+::: {.content-visible when-format="typst"}
+
+```{=typst}
+#pagebreak()
+```
+
+:::
+
+
+
+
+# Results
+
+
+
+# Discussion
+
+
+## Conclusion and Outlook
+
+
+
+# Statement of Reproducibility
+All code developed for data processing, model training, and deployment is fully available in the project's [GitHub repository](https://github.com/klaveflo/Wolf_habitat_suitability_Graubunden). While the specific ground truth data provided by Zurich Airport is confidential and cannot be publicly shared, the code structure allows for the reproduction of the workflow using similar datasets. The [satellite](https://browser.dataspace.copernicus.eu/), [official survey and fire brigade responsibility area](https://geo.zh.ch/) data are all openly available on the corresponding websites. 
+
+To ensure reproducibility, maintainability, and simple reusability, set seeds were used and the codebase was refactored into documented, modular functions. This prevents code duplication and allows specific steps, such as the temporal triplet generation or the model application to be reused independently. Key configuration variables and hard-to-tune parameters (e.g., temporal window sizes, cloud probability thresholds, features to use) are declared at the top of the notebooks to facilitate adaptation to new research questions.
+
+Project version control was managed via GitHub. All computational tasks, including data preprocessing and model training, were optimized to run on standard local hardware.
+
+
+# References {#sec-refs}
+
+{{< references >}}
+
+
+::: {.content-hidden when-format="html"}
+
+# List of figures {.unnumbered}
+
+{{< list-of-figures >}}
+
+# List of tables {.unnumbered}
+
+{{< list-of-tables >}}
+
+:::
+
+# Appendix {.unnumbered}
+
+![Confusion Matrix (left) and ROC-Curve (right) for the baseline SVM model using the hybrid-feature set](images/models/baseline_svm_hybrid_evaluation.png){#fig-baseline_SVM_HYBRID width="100%"}
