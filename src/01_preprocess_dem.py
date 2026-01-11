@@ -1,52 +1,62 @@
+# 01: DEM Preprocessing
+
+# Description:
+# Resamples the high-resolution VRT (Virtual Raster) to a manageable
+# single GeoTIFF file with 10m resolution for analysis.
+#
+# Key Steps:
+# 1. Setup paths relative to the project root.
+# 2. Resample (Downsample) using GDAL Warp with 'Average' method.
+# ==========================================
+
 import os
 from osgeo import gdal
 
-# --- PFAD-KONFIGURATION ---
-# Wir ermitteln den Pfad dieses Skripts (z.B. .../project/code/)
+# --- PATH CONFIGURATION ---
+# Get directory of this script
 script_dir = os.path.dirname(os.path.abspath(__file__))
-# Wir gehen einen Ordner hoch zum Projekt-Root (z.B. .../project/)
+# Get project root directory
 project_root = os.path.dirname(script_dir)
 
-# Pfade relativ zum Projekt-Root definieren
+# Define file paths
 input_vrt = os.path.join(project_root, "data", "swissalti3d", "swissalti3d_raw.vrt")
 output_folder = os.path.join(project_root, "output")
 output_tif = os.path.join(output_folder, "dem_10m_graubuenden.tif")
 
-target_resolution = 10  # 10 Meter Auflösung
+target_resolution = 10  # Target resolution in meters
 
-# Ordner 'output' erstellen, falls nicht vorhanden
+# Ensure output directory exists
 os.makedirs(output_folder, exist_ok=True)
 
-print(f"Projekt-Root erkannt: {project_root}")
-print(f"Lese VRT: {input_vrt}")
-print(f"Schreibe nach: {output_tif}")
+print(f"Project Root: {project_root}")
+print(f"Reading VRT: {input_vrt}")
+print(f"Output Target: {output_tif}")
 
-# Prüfen, ob VRT existiert
+# Verify input file existence
 if not os.path.exists(input_vrt):
-    raise FileNotFoundError(f"Die VRT-Datei wurde nicht gefunden: {input_vrt}. Überprüfe den Pfad!")
+    raise FileNotFoundError(f"VRT file not found at: {input_vrt}. Please check the path.")
 
-print(f"Starte Resampling... Zielauflösung: {target_resolution}m. Das kann einige Minuten dauern...")
+# --- RESAMPLING ---
+print(f"Starting resampling to {target_resolution}m resolution...")
 
-# gdal.Warp ist das Schweizer Taschenmesser für Rasteroperationen
-# Es liest das VRT und schreibt ein neues, komprimiertes GeoTIFF
+# Use gdal.Warp to resample and compress the dataset
 ds = gdal.Warp(
     output_tif,
     input_vrt,
     format='GTiff',
     xRes=target_resolution,
     yRes=target_resolution,
-    # WICHTIG: 'average' Resampling verhindert Datenrauschen beim Verkleinern!
-    resampleAlg=gdal.GRA_Average, 
-    dstNodata=-9999,      # Definiert, was "keine Daten" sind
-    outputType=gdal.GDT_Float32, # Float32 ist präzise genug für Höhenmeter
+    resampleAlg=gdal.GRA_Average, # Average prevents data noise when downsampling
+    dstNodata=-9999,              # Define NoData value
+    outputType=gdal.GDT_Float32,  # Float32 is sufficient for elevation
     creationOptions=[
-        "COMPRESS=LZW",   # Verlustfreie Kompression spart Platz
-        "TILED=YES",      # Beschleunigt das spätere Lesen von Ausschnitten
-        "BIGTIFF=IF_NEEDED" # Falls die Datei doch > 4GB wird
+        "COMPRESS=LZW",           # Lossless compression
+        "TILED=YES",              # Optimized for faster reading
+        "BIGTIFF=IF_NEEDED"       # Handle files larger than 4GB
     ]
 )
 
-# Aufräumen (Schließt die Datei und schreibt final auf die Festplatte)
+# Close dataset to flush data to disk
 ds = None 
 
-print(f"Fertig! Datei gespeichert unter: {output_tif}")
+print(f"Success! File saved to: {output_tif}")
