@@ -24,27 +24,30 @@ st.markdown("""
         background-color: #f9f9f9;
         border: 1px solid #e0e0e0;
         margin-bottom: 10px;
-        color: #333333;    
+        color: #333333 !important;
     }
     .legend-item {
         display: flex;
         align-items: center;
         margin-bottom: 5px;
         font-size: 14px;
+        color: #333333 !important;
     }
     .color-box {
         width: 20px;
         height: 20px;
         margin-right: 10px;
         border-radius: 3px;
-        border: 1px solid rgba(0,0,0,0.1);
+        border: 1px solid rgba(0,0,0,0.2);
     }
     .gradient-bar {
         height: 15px;
         width: 100%;
-        background: linear-gradient(90deg, #d7191c 0%, #fdae61 50%, #1a9641 100%);
+        /* RdYlBu Gradient: Red -> Yellow -> Blue */
+        background: linear-gradient(90deg, #d73027 0%, #ffffbf 50%, #4575b4 100%);
         border-radius: 3px;
         margin-bottom: 5px;
+        border: 1px solid rgba(0,0,0,0.1);
     }
     </style>
 """, unsafe_allow_html=True)
@@ -129,16 +132,21 @@ with st.expander("ℹ️ About this Project & Methodology", expanded=False):
     ### Methodology: Multi-Criteria Analysis (MCA)
     The model calculates a suitability score (0 to 1) for every 10x10m area based on ecological and anthropogenic factors.
     
-    **Key Criteria:**
+    ##### Key Criteria:
     * **Landcover:** Forest density and shrubland availability (high weight).
     * **Prey:** Presence of alpine pastures as a proxy for wild ungulates.
     * **Topography:** Preference for moderate altitudes (900-2200m) and avoidance of steep cliffs.
     * **Disturbance:** Strong avoidance of settlements and heavy traffic roads (Distance decay).
 
-    **Scenarios:**
+    ##### Scenarios:
     * **Best Case Wolf:** Shows great habitat potential (suitability score > 0.6).
     * **Best Case Human:** Restricts the wolf to areas with minimal conflict potential (suitability score > 0.6, far from settlements/livestock grazing).
-
+                
+    ##### Visualization & Color Scale:
+    The map uses a **Red-Yellow-Blue** scale. To enhance visual contrast and interpretability, the color ramp is scaled to the **range 0.15 - 0.85** rather than the theoretical 0-1 interval.
+    * **Actual Scores:** The calculated suitability scores in the study area range from a minimum of **~0.20** to a maximum of **~0.85**.
+    * **Interpretation:** **Red** represents the relatively lowest suitability found locally, while **Blue** represents the best habitat available within the canton.
+        
     <br>                       
     
     For detailed methodology, data sources, and analysis, please refer to the [full report](#####) and [GitHub Repository](https://github.com/klaveflo/Wolf_habitat_suitability_Graubunden).            
@@ -159,13 +167,13 @@ with col_legend:
     # 1. Habitat Suitability Legend
     st.markdown("""
     <div class="legend-box">
-        <b>Habitat Suitability Index</b><br>
+        <b>Habitat Suitability</b><br>
         <div class="gradient-bar"></div>
-        <div style="display: flex; justify-content: space-between; font-size: 12px; color: #666;">
-            <span>Unsuitable (0)</span>
-            <span>Optimal (1)</span>
+        <div style="display: flex; justify-content: space-between; font-size: 12px; color: #333;">
+            <span>Low (Red)</span>
+            <span>High (Blue)</span>
         </div>
-        <small style="color: #666;">Base layer combining all criteria.</small>
+        <small style="color: #555;">Scaled to range 0.15 - 0.85.</small>
     </div>
     """, unsafe_allow_html=True)
 
@@ -174,18 +182,16 @@ with col_legend:
     <div class="legend-box">
         <b>Scenarios</b><br>
         <div class="legend-item">
-            <div class="color-box" style="background-color: #00CED1; opacity: 0.7;"></div>
+            <div class="color-box" style="background-color: #00FFFF; opacity: 0.7;"></div>
             <div>
                 <b>Best Case Wolf</b><br>
-                <small>Habitat potential (suitability score > 0.6).</small>
-            </div>
+                <small>Habitat potential (suitability score > 0.6) (Cyan)</small></div>
         </div>
         <div class="legend-item">
-            <div class="color-box" style="background-color: #8A2BE2; opacity: 0.7;"></div>
+            <div class="color-box" style="background-color: #FF00FF; opacity: 0.7;"></div>
             <div>
                 <b>Best Case Human</b><br>
-                <small>Conflict-minimized core areas.</small>
-            </div>
+                <small>Conflict-minimized core areas (suitability score > 0.6) (Magenta)</small></div>
         </div>
     </div>
     """, unsafe_allow_html=True)
@@ -195,18 +201,16 @@ with col_legend:
     <div class="legend-box">
         <b>Conflict Potential</b><br>
         <div class="legend-item">
-            <div class="color-box" style="background-color: #FF00FF; opacity: 0.7;"></div>
+            <div class="color-box" style="background-color: #000000; opacity: 0.8;"></div>
             <div>
-                <b>High Risk (Sheep)</b><br>
-                <small>Sheep alpages in good habitat.</small>
-            </div>
+                <b>High Risk</b><br>
+                <small>Sheep Alpages in good habitat (Black)</small></div>
         </div>
         <div class="legend-item">
-            <div class="color-box" style="background-color: #FF8C00; opacity: 0.7;"></div>
+            <div class="color-box" style="background-color: #8B4513; opacity: 0.8;"></div>
             <div>
                 <b>Medium Risk</b><br>
-                <small>General pastures overlapping good habitat.</small>
-            </div>
+                <small>General pastures in good habitat (Brown)</small></div>
         </div>
     </div>
     """, unsafe_allow_html=True)
