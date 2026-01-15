@@ -2,22 +2,22 @@
 title: "Satellite-Based Monitoring of Grassland Management"
 subtitle: "Detecting Mowing Events on Airport Areas Using Machine Learning"
 institut: "Institute for Environment and Natural Resources"
-keywords: "Machine Learning, Remote Sensing, Sentinel-2, Vegetation Indices, Mowing Detection, Airport Management"
+keywords: "Wolf, Habitat Suitability, Graubünden, GIS, Multi-Criteria Analysis "
 lang: en
 confidential: false
 cover-image:
   src: images/cover.png
   max-width: 100%
   max-height: 5cm
-thesis-type: "Project Work 2"
+thesis-type: "GISScience and Geodatabases Project"
 degree-type: "Bachelor's degree programme"
 study-year: "2023"
-submission-date: "2025-12-11"
+submission-date: "2026-01-18"
 study-direction: "Applied Digital Life Sciences"
-supervisors:
-  - title: ""
-    name: "Nils Ratnaweera"
-    affiliation: "ZHAW Life Sciences and Facility Management, Wädenswil"
+#supervisors:
+#  - title: ""
+#    name: "Nils Ratnaweera"
+#    affiliation: "ZHAW Life Sciences and Facility Management, Wädenswil"
 bibliography: references.bib
 author: 
   - Florian Klaver
@@ -61,54 +61,143 @@ I would like to thank my supervisor Nils Ratnaweera for his guidance and feedbac
 
 
 +---------+----------------------------------+
-| VI      | Vegetation Index                 |
+| MCA     | Multi-Criteria Analysis          |
 +---------+----------------------------------+
-| NDVI    | Normalized Difference Vegetation Index |
+| GIS     | Geographic Information System    |
 +---------+----------------------------------+
-| GNDVI   | Green Normalized Difference Vegetation Index |
+| DEM     | Digital Elevation Model          |
 +---------+----------------------------------+
-| EVI     | Enhanced Vegetation Index        |
+| HSI     | Habitat Suitability Index        |
 +---------+----------------------------------+
-| SAVI    | Soil-Adjusted Vegetation Index   |
+| WLC     | Weighted Linear Combination      |
 +---------+----------------------------------+
-| NDII    | Normalized Difference Infrared Index |
+| GDAL    | Geospatial Data Abstraction Library |
 +---------+----------------------------------+
-| NIR     | Near-Infrared                    |
+| VRT     | Virtual Raster Table             |
 +---------+----------------------------------+
-| SWIR    | Short-Wave Infrared              |
+| QGIS    | Quantum Geographic Information System |
 +---------+----------------------------------+
-| SAR     | Synthetic Aperture Radar         |
-+---------+----------------------------------+
-| ML      | Machine Learning                 |
-+---------+----------------------------------+
-| RF      | Random Forest                    |
-+---------+----------------------------------+
-| LGBM    | Light Gradient Boosting Machine  |
-+---------+----------------------------------+
-| SVM     | Support Vector Machine           |
-+---------+----------------------------------+
-
-
-
-# Introduction
 
 
 
 
 
-## Problem Statement and Research Gap
+# Introduction
+The natural recolonization of the Alps by the gray wolf (Canis lupus) represents one of the most significant ecological recoveries in Europe. After being eradicated in the 19th and 20th centuries, wolves have returned to Switzerland, protected under the Bern Convention and federal legislation. While this recovery is a conservation success, it has generated substantial social and economic conflict, particularly regarding livestock predation in alpine agricultural systems [@Glenz2001]. The presence of wolves in human-dominated landscapes creates a complex challenge: ensuring the long-term viability of the species while minimizing negative interactions with human activities, such as sheep farming [@Llaneza2012].
 
+To manage this coexistence effectively, it is crucial to understand spatial patterns of habitat suitability. Geographic Information Systems (GIS) and Multi-Criteria Analysis (MCA) have established themselves as standard methods for predicting potential wolf territories [@Belongie2008]. Early influential models, such as those by [@Massolo1998], identified road density and human population as critical limiting factors for wolf distribution, while high forest cover and prey abundance have a positive impact. More recent studies in the Alpine range have confirmed that while wolves can adapt to anthropogenic landscapes, their distribution is strongly shaped by the availability of refuge areas and the density of infrastructure [@Falcucci2013].
 
-## Goal
+However, reliance on biological suitability alone is often insufficient for management in densely populated regions like the Canton of Graubünden. There is a discrepancy between where wolves can biologically survive and where their presence is socially accepted or conflict-free. While large-scale models cover the Alpine arc, specific local analyses that contrast biological potential with human-defined conflict scenarios are necessary to inform local decision-making.
 
+The objective of this project is to model suitable wolf habitats in Graubünden using a raster-based Multi-Criteria Analysis. This study applies a Python-based geoprocessing workflow to integrate environmental factors such as forest cover and slope with anthropogenic factors such as human disturbance. Beyond standard suitability modeling, this project specifically aims to identify high-conflict zones characterized by agricultural use (grazing animals). Furthermore, it develops two distinct scenarios to visualize the management trade-offs: a "Best Case Wolf" scenario, focusing purely on biological suitability, and a "Best Case Human" scenario, which incorporates larger buffers around settlements and excludes conflict zones. The final output is an interactive map designed to allow users to toggle these overlays, thereby providing valuable insights into how spatial planning can facilitate coexistence.
 
 
 
 # Methods
 
 ## Study Area and Data Description
-### Study area
+The study area comprises the entire Canton of Graubünden, Switzerland. Located in the eastern part of the country, it is the largest canton by area and is characterized by a rugged alpine topography, extensive forest cover, and a relatively low population density compared to the rest of Switzerland. While the official area of the canton is approximately 7105 km², the total area analyzed in this study was 7072.43 km², based on the precise geometry of the boundary datasets employed.
 
+**PLACEHOLDER FOR STUDY AREA MAP**
+
+To perform the Multi-Criteria Analysis, high-resolution geospatial data were acquired from official federal sources. The specific datasets used are listed below:  
+
+- **Digital Elevation Model (DEM):** The swissALTI3D dataset from swisstopo was used to derive topographical criteria, specifically elevation and slope.
+- **Vector Data (Infrastructure and Forests):** SwissTLM3D (swisstopo), a large-scale topographic landscape model, provided vector data for defining forest areas and the road network.
+- **Land Use:** Detailed land use information was obtained from the Arealstatistik (geocat.ch). This point-based dataset was essential for identifying specific settlement areas, potential prey habitats, and agricultural zones (e.g., alpine pastures) relevant to conflict modeling.
+- **Administrative Boundaries:** The swissBOUNDARIES3D dataset (swisstopo) was used to define the exact study perimeter (Cantonal boundary of Graubünden).
+- **Background Maps:** For the final visualization and static map generation, the standard grey pixel map from swisstopo was utilized as a reference background.
+
+::: {.content-visible when-format="typst"}
+
+```{=typst}
+#v(2em)
+```
+
+:::
+
+## Data Preprocessing
+The data processing workflow was implemented in Python, utilizing the Geospatial Data Abstraction Library (GDAL) for raster manipulation. A uniform grid with a spatial resolution of 10 meters was established as the reference framework for all subsequent analyses.
+
+### Digital Elevation Model (DEM) Processing
+The high-resolution elevation data (swissALTI3D) was obtained as a collection of 7,541 individual coordinate tiles. To create a continuous elevation surface for the entire canton, these tiles were initially referenced via a Virtual Raster (VRT). Subsequently, the dataset was mosaicked and downsampled to the target resolution of 10 meters. The resampling was performed using the gdal.Warp function with the 'Average' algorithm. This method was selected to minimize data noise and preserve the mean elevation values of the underlying high-resolution pixels during the aggregation process. The resulting 10-meter resolution GeoTIFF served as the base layer for deriving topographical derivatives such as slope.
+
+### Derivation of Environmental and Anthropogenic Variables
+Following the establishment of the reference grid, vector and point datasets were processed to generate the specific criteria layers required for the Multi-Criteria Analysis.
+
+**Topographical Criteria:** Slope values (in degrees) were calculated directly from the 10-meter DEM using GDAL's DEM processing tools.  
+
+**Land Cover (Forests):** Forest areas were extracted from the SwissTLM3D land cover layer (tlm_bb_bodenbedeckung). Polygons classified as 'Wald' (Forest), 'Gebueschwald' (Shrub forest), 'Wald offen' (Open forest), and 'Gehoelzflaeche' (Wooded area) were rasterized into a binary grid (1 = Forest, 0 = Non-forest). A water mask was similarly generated to exclude standing water bodies ('Stehende Gewaesser') from the analysis.  
+
+**Anthropogenic Disturbance (Euclidean Distance):** To model human disturbance, Euclidean distance grids were generated for both roads and settlements.  
+
+- *Roads:* The road network was derived from SwissTLM3D (tlm_strassen_strasse). The dataset was filtered to include only major traffic arteries (e.g., motorways, main roads) likely to cause significant disturbance. Subterranean segments (tunnels) were explicitly excluded. The distance from every pixel to the nearest road segment was then calculated.  
+- *Settlements:* Settlement data were obtained from the Arealstatistik (Categories 1–13, covering industrial, commercial, and residential areas). As this dataset consists of point features, a buffer of 150 meters was applied to simulate continuous settlement zones. The Euclidean distance to these buffered areas was subsequently calculated.
+
+**Prey Availability:** Potential prey habitats were identified using Arealstatistik codes 45–49, representing alpine pastures and meadows. These point features were rasterized to create a baseline layer for prey potential.
+
+All derived rasters were aligned to the 10-meter resolution and extent of the DEM to ensure spatial consistency.
+
+
+## Multi-Criteria Analysis (MCA)
+The core analysis employed a Weighted Linear Combination (WLC) to calculate a Habitat Suitability Index (HSI). This method involves three distinct steps: standardization of criteria scores, weighting of factors, and final aggregation.
+
+### Standardization of Criteria (Scoring)
+Input variables, originally measured in diverse units (degrees, meters, binary presence), were transformed into a standardized suitability score ranging from 0 (unsuitable) to 1 (highly suitable). The definition of these suitability ranges and optimal thresholds was derived from the established literature on wolf ecology cited in the introduction, ensuring the model parameters reflect documented ecological requirements. This process utilized fuzzy logic membership functions rather than strict binary thresholds to reflect the gradual nature of ecological preference.
+
+**Elevation:** A trapezoidal function was applied to model the wolf's altitudinal preference. The suitability score increases from 500 m, reaches an optimal plateau between 900 m and 2200 m (Score = 1.0), and decreases to zero at 2600 m.
+
+**Slope:** An inverse linear normalization was used. Slopes below 30° were considered ideal (Score = 1.0), while suitability linearly decreased to zero at a cutoff of 50°.
+
+**Forest Cover:** To account for the density of cover rather than mere presence, a moving window filter (500 m size) was applied to the binary forest raster. This generated a score representing the proportion of forest cover within the immediate vicinity.
+
+**Prey Availability:** The sparse point data for alpine pastures were smoothed using a Gaussian blur (sigma = 100 m) to create continuous "hunting zones" rather than isolated points.
+
+**Anthropogenic Disturbance:** A logistic sigmoid function (S-curve) was used to model the avoidance of human activity. This function provides a soft transition where suitability remains low near the source of disturbance and increases rapidly after a specific inflection point.
+
+- *Roads:* Inflection point at 500 m.
+- *Settlements:* Inflection point at 1000 m.
+- The final disturbance score was calculated as the average of the road and settlement scores.
+
+
+### Weighting and Aggregation
+Weights were assigned to each criterion based on their relative importance to wolf ecology, summing to a total of 1.0. The weights were distributed as follows: 
+
+- *Disturbance (Security):* 0.40 (Dominant factor)
+- *Forest Cover:* 0.25
+- *Prey Availability:* 0.15
+- *Elevation:* 0.10
+- *Topography (Slope):* 0.10
+
+The final Habitat Suitability Index (HSI) was calculated by summing the weighted scores of all factors. Water bodies were explicitly masked out. The result is a continuous raster surface where higher pixel values indicate a higher probability of suitable wolf habitat based on the defined biological and anthropogenic constraints.
+
+
+## Conflict Zone Identification
+To assess the potential for human-wildlife conflict, specifically regarding livestock predation, a separate conflict model was developed. This model integrated the calculated Habitat Suitability Index (HSI) with agricultural land use data.
+
+**Data Classification:** Agricultural zones were extracted from the Arealstatistik dataset and classified into two risk categories based on livestock vulnerability:
+
+- *High Risk (Sheep Alpages):* Areas designated as sheep pastures (Code 49). Sheep are particularly vulnerable to wolf predation, representing the highest conflict potential.
+- *Medium Risk (General Pastures):* Areas including home pastures, scrub pastures, and general alpine meadows (Codes 43–48), typically used for cattle or mixed grazing, which represent a lower but significant conflict risk.
+
+**Spatial Modeling:** Since the land use data were point-based, a buffer of 200 meters was applied to all pasture points to simulate realistic grazing ranges. A conflict zone was defined not merely by the presence of livestock, but by the overlap of these grazing buffers with suitable wolf habitat. A threshold of HSI > 0.50 was applied; pastures located in unsuitable habitat (e.g. near dense urban areas or on extreme slopes) were excluded from the conflict map, since the probability of wolf presence in such areas is negligible.
+
+
+## Scenario Definition and Spatial Analysis
+Finally, two distinct suitability scenarios were derived to quantify the spatial trade-off between maximizing ecological potential and minimizing social conflict.
+
+**Scenario 1: Best Case Wolf (Biological Suitability):** This scenario identifies all areas that meet the biological requirements of the species, regardless of proximity to human infrastructure. It is defined as any area with an HSI score ≥ 0.60.
+
+**Scenario 2: Best Case Human (Social Tolerance):** This scenario restricts the suitable habitat to areas that are both biologically viable and socially acceptable. It applies the same biological threshold (HSI ≥ 0.60) but enforces strict exclusion criteria:
+
+- *Exclusion of Conflict Zones:* All identified High and Medium risk conflict zones were removed.
+- *Enhanced Safety Buffers:* Stricter safety distances were applied, excluding all areas within 750 meters of settlements and 250 meters of major roads, to ensure a high degree of separation between wolf territories and human activity.
+
+For both scenarios, a minimum patch size filter of 1000 pixels (equivalent to 10 hectares) was applied to remove fragmented, non-viable habitat patches (despeckling). The resulting areas were calculated in square kilometers to assess the reduction in available habitat imposed by social constraints.
+
+
+## Visualizations and Dashboard
+The results of the analysis were synthesized into both static and interactive visualization products. Static cartographic outputs for the report were generated using QGIS (Quantum Geographic Information System). For better user engagement and scenario exploration, a web-based interactive dashboard was developed using the Python framework Streamlit. This application integrates the processed raster layers (HSI, conflict zones, and scenarios), allowing users to toggle individual criteria and compare the spatial extent of the two management scenarios in more detail.
 
 ::: {.content-visible when-format="typst"}
 
@@ -159,4 +248,3 @@ Project version control was managed via GitHub. All computational tasks, includi
 
 # Appendix {.unnumbered}
 
-![Confusion Matrix (left) and ROC-Curve (right) for the baseline SVM model using the hybrid-feature set](images/models/baseline_svm_hybrid_evaluation.png){#fig-baseline_SVM_HYBRID width="100%"}
