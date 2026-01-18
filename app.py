@@ -206,13 +206,13 @@ with col_legend:
             <div class="color-box" style="background-color: #00FFFF; opacity: 0.7;"></div>
             <div>
                 <b>Potential Core Habitats</b><br>
-                <small>Suitability score > 0.6 (Cyan)</small></div>
+                <small>Suitability score > 0.6, Area: 2225 km² (Cyan)</small></div>
         </div>
         <div class="legend-item">
             <div class="color-box" style="background-color: #FF00FF; opacity: 0.7;"></div>
             <div>
                 <b>Conflict-Minimized Core Habitats</b><br>
-                <small>Suitability score > 0.6 and no conflicts (Magenta)</small></div>
+                <small>Suitability score > 0.6 and no conflicts, Area: 603 km² (Magenta)</small></div>
         </div>
     </div>
     """, unsafe_allow_html=True)
@@ -242,8 +242,12 @@ with col_legend:
 st.markdown("---")
 st.markdown("""
 <div style="text-align: center; color: #666; font-size: 14px;">
-    Semester Project GISScience and Geodatabases | ZHAW Life Sciences & Facility Management<br>
-    Data Sources: swisstopo (swissALTI3D, swissTLM3D, swissBOUNDARIES3D), geocat (Arealstatistik) | 
+    Semester Project GISScience and Geodatabases | ZHAW Life Sciences & Facility Management | Applied Digital Life Sciences<br>
+    <b>Data Sources: swisstopo (<a href="https://www.swisstopo.admin.ch/en/geodata/height/alti3d.html" target="_blank">swissALTI3D</a>, 
+    <a href="https://www.swisstopo.admin.ch/en/geodata/landscape/tlm3d.html" target="_blank">swissTLM3D</a>, 
+    <a href="https://www.swisstopo.admin.ch/en/geodata/landscape/boundaries3d.html" target="_blank">swissBOUNDARIES3D</a>),   
+    BFS (<a href="https://www.geocat.ch/geonetwork/srv/api/records/f0b56783-613d-4664-9216-98442ce1994d?language=ger" target="_blank">Arealstatistik</a>).
+    <br> 
     <a href="https://github.com/klaveflo/Wolf_habitat_suitability_Graubunden" target="_blank">GitHub Repository</a> | 
     <a href="#####" target="_blank">Full Report</a>
 </div>
