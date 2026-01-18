@@ -13,7 +13,7 @@ This repository contains the complete Python-based geoprocessing workflow used t
 
 Key Findings: While biologically suitable habitat is abundant (~2225 km²), applying strict social constraints reduces the available core habitat by approximately 73% to only ~603 km², resulting in a highly fragmented landscape. 
 <br>  
-You can explore the results, toggle map layers, and compare scenarios interactively via this streamlit [dashboard](https://wolf-habitat-suitability-graubunden.streamlit.app/). <br>
+You can explore the results, toggle map layers, and compare scenarios interactively via this [streamlit dashboard](https://wolf-habitat-suitability-graubunden.streamlit.app/). <br>
 The full report can be accessed as [web-version](https://klaveflo.github.io/Wolf_habitat_suitability_Graubunden/) or as [PDF](docs/index.pdf).
 
 ## Repository Structure
