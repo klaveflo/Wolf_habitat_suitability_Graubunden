@@ -160,8 +160,8 @@ with st.expander("ℹ️ About this Project & Methodology", expanded=False):
     * **Disturbance:** Strong avoidance of settlements and heavy traffic roads (Distance decay).
 
     ##### Scenarios:
-    * **Potential Core Habitats:** Shows great habitat potential (suitability score > 0.6).
-    * **Conflict-Minimized Core Habitats:** Restricts the wolf to areas with minimal conflict potential (suitability score > 0.6, far from settlements/livestock grazing).
+    * **Potential Core Habitats:** Shows great habitat potential (suitability score ≥ 0.6).
+    * **Conflict-Minimized Core Habitats:** Restricts the wolf to areas with minimal conflict potential (suitability score ≥ 0.6, far from settlements/livestock grazing).
                 
     ##### Visualization & Color Scale:
     The map uses a **Red-Yellow-Blue** scale. To enhance visual contrast and interpretability, the color ramp is scaled to the **range 0.15 - 0.85** rather than the theoretical 0-1 interval.
@@ -170,7 +170,7 @@ with st.expander("ℹ️ About this Project & Methodology", expanded=False):
         
     <br>                       
     
-    For detailed methodology, data sources, and analysis, please refer to the [full report](#####) and [GitHub Repository](https://github.com/klaveflo/Wolf_habitat_suitability_Graubunden).            
+    For detailed methodology and analysis, please refer to the [full report](https://klaveflo.github.io/Wolf_habitat_suitability_Graubunden/) and [GitHub Repository](https://github.com/klaveflo/Wolf_habitat_suitability_Graubunden).            
     """, unsafe_allow_html=True)
 
 # --- MAIN CONTENT AREA ---
@@ -249,6 +249,6 @@ st.markdown("""
     BFS (<a href="https://www.geocat.ch/geonetwork/srv/api/records/f0b56783-613d-4664-9216-98442ce1994d?language=ger" target="_blank">Arealstatistik</a>).
     <br> 
     <a href="https://github.com/klaveflo/Wolf_habitat_suitability_Graubunden" target="_blank">GitHub Repository</a> | 
-    <a href="#####" target="_blank">Full Report</a>
+    <a href="https://klaveflo.github.io/Wolf_habitat_suitability_Graubunden/" target="_blank">Full Report</a>
 </div>
 """, unsafe_allow_html=True)
