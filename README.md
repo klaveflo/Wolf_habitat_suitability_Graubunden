@@ -19,21 +19,21 @@ The full report can be accessed as [web-version](https://klaveflo.github.io/Wolf
 ## Repository Structure
 ```
 Wolf_Habitat_Suitability_Graubunden/
-│───.gitignore                                # Collection of files and folder for Git to ignore     
-│───app.py                                    # Code for streamlit dashboard
-│───environment_local.yml                     # dependancies for full workflow
-│───README.md                                 # README
-│───requirements.txt                          # requirements for web-hosted streamlit dashboard
-│───wolf_habitat.qgz                          # QGIS-project
-│───_quarto.yml                               # Quarto dependancies
+│───.gitignore                                 # Collection of files and folder for Git to ignore     
+│───app.py                                     # Code for streamlit dashboard
+│───environment_local.yml                      # dependancies for full workflow
+│───README.md                                  # README
+│───requirements.txt                           # requirements for web-hosted streamlit dashboard
+│───wolf_habitat.qgz                           # QGIS-project
+│───_quarto.yml                                # Quarto dependancies
 ├───docs
-│   │───.nojekyll                             # Additional file for webversion of report
-│   │───index.html                            # HTML for webversion of report
-│   │───index.pdf                             # Full report as PDF
-│   │───index.qmd                             # Raw quarto file of report
-│   │───references.bib                        # List of references
+│   │───.nojekyll                              # Additional file for webversion of report
+│   │───index.html                             # HTML for webversion of report
+│   │───index.pdf                              # Full report as PDF
+│   │───index.qmd                              # Raw quarto file of report
+│   │───references.bib                         # List of references
 │   │
-│   └───images                                # Images shown in report
+│   └───images                                 # Images shown in report
 |    └───... 
 │
 ├───src
