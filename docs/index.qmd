@@ -1,8 +1,8 @@
 ---
-title: "Satellite-Based Monitoring of Grassland Management"
-subtitle: "Detecting Mowing Events on Airport Areas Using Machine Learning"
+title: "Wolf Habitat Analysis in Graubünden"
+subtitle: "A Multi-Criteria Analysis Approach for Conflict-Sensitive Habitat Suitability Modeling"
 institut: "Institute for Environment and Natural Resources"
-keywords: "Wolf, Habitat Suitability, Graubünden, GIS, Multi-Criteria Analysis "
+keywords: "Wolf, Habitat Suitability, Graubünden, GIS, Multi-Criteria Analysis, Human-Wildlife Conflict, Spatial Modeling"
 lang: en
 confidential: false
 cover-image:
@@ -35,17 +35,16 @@ format:
 
 
 # Abstract {.unnumbered .unlisted}
+The natural recolonization of the Alps by the gray wolf presents a significant conservation success but also a considerable challenge for coexistence in human-dominated landscapes. This study aims to model suitable wolf habitats in the Canton of Graubünden using a raster-based Multi-Criteria Analysis (MCA) and to quantify the spatial trade-offs between biological potential and social constraints. A Python-based geoprocessing workflow was developed to integrate environmental factors (forest cover, slope, prey availability) with anthropogenic disturbance variables (roads, settlements). Additionally, a conflict model was created to identify high-risk zones where suitable habitat overlaps with vulnerable livestock grazing areas. 
 
+The analysis revealed that while biologically suitable habitat is abundant (2225 km²), applying strict social constraints by excluding conflict zones and enforcing wide safety buffers reduces the available core habitat by approximately 73% to only 603 km². The resulting "Conflict-Minimized" scenario depicts a highly fragmented landscape likely insufficient for supporting stable wolf pack dynamics. These findings suggest that a management strategy relying solely on spatial segregation is unrealistic. Sustainable coexistence in Graubünden will require accepting a degree of overlap between wolf territories and agricultural activity, necessitating active herd protection measures rather than theoretical exclusion zones. 
 
-
-# Zusammenfassung {.unnumbered .unlisted}
-
-
+An interactive dashboard visualizing all results was developed to facilitate exploration and is accessible [here](https://wolf-habitat-suitability-graubunden.streamlit.app/).
 
 # Acknowledgements {.unnumbered .unlisted}
+I would like to acknowledge the use of AI-based tools, which helped fixing and debugging issues in the code as well as refine text. 
 
-I would like to thank my supervisor Nils Ratnaweera for his guidance and feedback throughout this project. I am also very grateful to the Airport Zürich and the ZHAW research group from the Institute for Environment and Natural Resources for providing the necessary data used in this study. Finally, I would like to acknowledge the use of AI-based tools, which helped fixing and debugging problems in the code as well as refine text.
-
+Cover Image: "Grauer und schwarzer Wolf, der tagsüber in der Nähe eines Baumstamms steht" by Robert Larsson via [Unsplash](https://unsplash.com/de/fotos/grauer-und-schwarzer-wolf-der-tagsuber-in-der-nahe-eines-baumstamms-steht-jGip_U1fXTI).
 
 
 ::: {.content-hidden when-format="html"}
@@ -71,7 +70,7 @@ I would like to thank my supervisor Nils Ratnaweera for his guidance and feedbac
 +---------+----------------------------------+
 | WLC     | Weighted Linear Combination      |
 +---------+----------------------------------+
-| GDAL    | Geospatial Data Abstraction Library |
+| GDAL    | Geospatial Data Abstraction Library   |
 +---------+----------------------------------+
 | VRT     | Virtual Raster Table             |
 +---------+----------------------------------+
@@ -83,30 +82,32 @@ I would like to thank my supervisor Nils Ratnaweera for his guidance and feedbac
 
 
 # Introduction
-The natural recolonization of the Alps by the gray wolf (Canis lupus) represents one of the most significant ecological recoveries in Europe. After being eradicated in the 19th and 20th centuries, wolves have returned to Switzerland, protected under the Bern Convention and federal legislation. While this recovery is a conservation success, it has generated substantial social and economic conflict, particularly regarding livestock predation in alpine agricultural systems [@Glenz2001]. The presence of wolves in human-dominated landscapes creates a complex challenge: ensuring the long-term viability of the species while minimizing negative interactions with human activities, such as sheep farming [@Llaneza2012].
+The natural recolonization of the Alps by the gray wolf (Canis lupus) represents one of the most significant ecological recoveries in Europe. Protected under the Bern Convention and federal legislation, wolves have returned to Switzerland after being eradicated in the 19th and 20th centuries. While a conservation success, this recovery has generated substantial social and economic conflict, particularly regarding livestock predation in alpine agricultural systems [@Glenz2001]. The presence of wolves in human-dominated landscapes creates a complex challenge: ensuring the long-term viability of the species while minimizing negative interactions with human activities [@Llaneza2012].
 
-To manage this coexistence effectively, it is crucial to understand spatial patterns of habitat suitability. Geographic Information Systems (GIS) and Multi-Criteria Analysis (MCA) have established themselves as standard methods for predicting potential wolf territories [@Belongie2008]. Early influential models, such as those by [@Massolo1998], identified road density and human population as critical limiting factors for wolf distribution, while high forest cover and prey abundance have a positive impact. More recent studies in the Alpine range have confirmed that while wolves can adapt to anthropogenic landscapes, their distribution is strongly shaped by the availability of refuge areas and the density of infrastructure [@Falcucci2013].
+To manage this coexistence effectively, it is crucial to understand spatial patterns of habitat suitability. Geographic Information Systems (GIS) and Multi-Criteria Analysis (MCA) have established themselves as standard methods for predicting potential wolf territories [@Belongie2008]. Early models identified road density and human population as critical limiting factors, while recent studies in the Alpine range confirm that wolf distribution is strongly shaped by the availability of refuge areas and infrastructure density [@Massolo1998; @Falcucci2013].
 
-However, reliance on biological suitability alone is often insufficient for management in densely populated regions like the Canton of Graubünden. There is a discrepancy between where wolves can biologically survive and where their presence is socially accepted or conflict-free. While large-scale models cover the Alpine arc, specific local analyses that contrast biological potential with human-defined conflict scenarios are necessary to inform local decision-making.
+However, reliance on biological suitability alone is often insufficient for management in densely populated regions like the Canton of Graubünden. A discrepancy exists between where wolves can biologically survive and where their presence is socially accepted. While large-scale models cover the Alpine arc, specific local analyses contrasting biological potential with human-defined conflict scenarios are necessary to inform local decision-making.
 
-The objective of this project is to model suitable wolf habitats in Graubünden using a raster-based Multi-Criteria Analysis. This study applies a Python-based geoprocessing workflow to integrate environmental factors such as forest cover and slope with anthropogenic factors such as human disturbance. Beyond standard suitability modeling, this project specifically aims to identify high-conflict zones characterized by agricultural use (grazing animals). Furthermore, it develops two distinct scenarios to visualize the management trade-offs: a "Potential Core Habitats" scenario, focusing purely on biological suitability, and a "Conflict-Minimized Core Habitats" scenario, which incorporates larger buffers around settlements and excludes conflict zones. The final output is an interactive map designed to allow users to toggle these overlays, thereby providing valuable insights into how spatial planning can facilitate coexistence.
+The objective of this project is to model suitable wolf habitats in Graubünden using a raster-based MCA. This study applies a Python-based geoprocessing workflow to integrate environmental factors with anthropogenic disturbance. Beyond standard suitability modeling, this project specifically aims to identify high-conflict zones characterized by agricultural use. Furthermore, it develops two distinct scenarios to visualize the management trade-offs: a "Potential Core Habitats" scenario, focusing purely on biological suitability, and a "Conflict-Minimized Core Habitats" scenario, which incorporates larger buffers around settlements and excludes conflict zones. The final output is an interactive map designed to allow users to toggle these overlays, facilitating the visualization of coexistence strategies.
 
 
 
 # Methods
 
 ## Study Area and Data Description
-The study area comprises the entire Canton of Graubünden, Switzerland. Located in the eastern part of the country, it is the largest canton by area and is characterized by a rugged alpine topography, extensive forest cover, and a relatively low population density compared to the rest of Switzerland. While the official area of the canton is approximately 7105 km², the total area analyzed in this study was 7072.43 km², based on the precise geometry of the boundary datasets employed.
+The study area comprises the entire Canton of Graubünden, Switzerland. Located in the eastern part of the country, it is the largest canton by area and is characterized by a rugged alpine topography, extensive forest cover, and a relatively low population density compared to the rest of Switzerland. While the official area of the canton is approximately 7105 km², the analyzed area in this study was 7072.43 km², based on the precise geometry of the boundary datasets employed.
 
 ![Map of Switzerland highlighting the Canton of Graubünden (in blue) as the study area for wolf habitat suitability analysis.](images/study_area_map.svg){#fig-study-area width="90%"}
 
 To perform the Multi-Criteria Analysis, high-resolution geospatial data were acquired from official federal sources. The specific datasets used are listed below:  
 
-- **Digital Elevation Model (DEM):** The swissALTI3D dataset from swisstopo was used to derive topographical criteria, specifically elevation and slope.
-- **Vector Data (Infrastructure and Forests):** SwissTLM3D (swisstopo), a large-scale topographic landscape model, provided vector data for defining forest areas and the road network.
-- **Land Use:** Detailed land use information was obtained from the Arealstatistik (BFS). This point-based dataset was essential for identifying specific settlement areas, potential prey habitats, and agricultural zones (e.g., alpine pastures) relevant to conflict modeling.
-- **Administrative Boundaries:** The swissBOUNDARIES3D dataset (swisstopo) was used to define the exact study perimeter (Cantonal boundary of Graubünden).
-- **Background Maps:** For the final visualization and static map generation, the standard grey pixel map from swisstopo was utilized as a reference background.
+- **Digital Elevation Model (DEM):** swissALTI3D (swisstopo) for elevation and slope.
+- **Vector Data:** SwissTLM3D (swisstopo) for forest areas and road networks.
+- **Land Use:** Arealstatistik (BFS) for settlement areas, potential prey habitats, and agricultural zones (e.g., alpine pastures).
+- **Administrative Boundaries:** swissBOUNDARIES3D (swisstopo) for the study perimeter.
+- **Background Maps:**  Standard grey pixel map (swisstopo) for visualization.
+
+All input data were projected in the Swiss CH1903+ / LV95 coordinate system.
 
 ::: {.content-visible when-format="typst"}
 
@@ -117,13 +118,13 @@ To perform the Multi-Criteria Analysis, high-resolution geospatial data were acq
 :::
 
 ## Data Preprocessing
-The data processing workflow was implemented in Python, utilizing the Geospatial Data Abstraction Library (GDAL) for raster manipulation. A uniform grid with a spatial resolution of 10 meters was established as the reference framework for all subsequent analyses.
+The workflow was implemented in Python using the Geospatial Data Abstraction Library (GDAL). To ensure rigorous spatial consistency, a master binary mask was created from the cantonal boundary geometry. All derived rasters were aligned to a uniform 10-meter resolution grid and strictly clipped to this mask, assigning NoData values to pixels outside the canton.
 
 ### Digital Elevation Model (DEM) Processing
-The high-resolution elevation data (swissALTI3D) was obtained as a collection of 7,541 individual coordinate tiles. To create a continuous elevation surface for the entire canton, these tiles were initially referenced via a Virtual Raster (VRT). Subsequently, the dataset was mosaicked and downsampled to the target resolution of 10 meters. The resampling was performed using the gdal.Warp function with the 'Average' algorithm. This method was selected to minimize data noise and preserve the mean elevation values of the underlying high-resolution pixels during the aggregation process. The resulting 10-meter resolution GeoTIFF served as the base layer for deriving topographical derivatives such as slope.
+The swissALTI3D data, obtained as 7,541 individual tiles, were mosaicked and downsampled to the target 10-meter resolution using the 'Average' algorithm to minimize data noise while preserving mean elevation values. A Virtual Raster Table (VRT) was created to facilitate efficient access and processing of the large DEM dataset without generating a single massive file. 
 
 ### Derivation of Environmental and Anthropogenic Variables
-Following the establishment of the reference grid, vector and point datasets were processed to generate the specific criteria layers required for the Multi-Criteria Analysis. To ensure spatial consistency, a master binary mask was created from the cantonal boundary geometry (swissBOUNDARIES3D). All derived rasters were strictly clipped to this mask, assigning NoData values to all pixels falling outside the canton.
+Following the establishment of the reference grid, vector and point datasets were processed to generate the specific criteria layers required for the Multi-Criteria Analysis. 
 
 **Topographical Criteria:** Slope values (in degrees) were calculated directly from the 10-meter DEM using GDAL's DEM processing tools.  
 
@@ -132,11 +133,9 @@ Following the establishment of the reference grid, vector and point datasets wer
 **Anthropogenic Disturbance (Euclidean Distance):** To model human disturbance, Euclidean distance grids were generated for both roads and settlements.  
 
 - *Roads:* The road network was derived from SwissTLM3D (tlm_strassen_strasse). The dataset was filtered to include only major traffic arteries (e.g., motorways, main roads) likely to cause significant disturbance. Subterranean segments (tunnels) were explicitly excluded. The distance from every pixel to the nearest road segment was then calculated.  
-- *Settlements:* Settlement data were obtained from the Arealstatistik (Categories 1–13, covering industrial, commercial, and residential areas). As this dataset consists of point features, a buffer of 150 meters was applied to simulate continuous settlement zones. The Euclidean distance to these buffered areas was subsequently calculated.
+- *Settlements:* Settlement data were obtained from the Arealstatistik (Categories 1-13, covering industrial, commercial, and residential areas). As this dataset consists of point features, a buffer of 150 meters was applied to simulate continuous settlement zones. The Euclidean distance to these buffered areas was subsequently calculated.
 
-**Prey Availability:** Potential prey habitats were identified using the Arealstatistik dataset. This selection included home pastures (Codes 43–44), alpine pastures (Codes 45–49), and unproductive vegetation (Code 65) suitable for wild game such as chamois and ibex. These point features were rasterized to create a baseline layer for prey potential.
-
-During the process, all datasets were rasterized and aligned to the 10-meter resolution and extent of the reference DEM grid. Vector features were spatially filtered to the cantonal boundary of Graubünden prior to rasterization to ensure efficiency.
+**Prey Availability:** Potential prey habitats were identified using the Arealstatistik dataset. This selection included home pastures (Codes 43-44), alpine pastures (Codes 45-49), and unproductive vegetation (Code 65) suitable for wild game such as chamois and ibex. These point features were rasterized to create a baseline layer for prey potential.
 
 
 ## Multi-Criteria Analysis (MCA)
@@ -154,10 +153,10 @@ The core analysis employed a Weighted Linear Combination (WLC) to calculate a Ha
 ]
 ```
 
-### Standardization of Criteria (Scoring)
-Input variables, originally measured in diverse units (degrees, meters, binary presence), were transformed into a standardized suitability score ranging from 0 (unsuitable) to 1 (highly suitable). The definition of these suitability ranges and optimal thresholds was derived from the established literature on wolf ecology cited in the introduction, ensuring the model parameters reflect documented ecological requirements. This process utilized fuzzy logic membership functions rather than strict binary thresholds to reflect the gradual nature of ecological preference.
+### Standardization (Scoring)
+Input variables, originally measured in diverse units (degrees, meters, binary presence), were transformed into a standardized suitability score ranging from 0 (unsuitable) to 1 (highly suitable). The definition of these suitability ranges and optimal thresholds was derived from literature to reflect documented ecological requirements and utilized fuzzy logic membership functions rather than strict binary thresholds to reflect the gradual nature of ecological preference.
 
-**Elevation:** A trapezoidal function was applied to model the wolf's altitudinal preference. The suitability score increases from 500 m, reaches an optimal plateau between 900 m and 2200 m (Score = 1.0), and decreases to zero at 2600 m.
+**Elevation:** A trapezoidal function was applied to model the wolf's altitudinal preference. The suitability score increases from 500 m, reaches an optimal plateau between 900 m and 2200 m (Score = 1.0), and decreases back to zero at 2600 m.
 
 **Slope:** An inverse linear normalization was used. Slopes below 30° were considered ideal (Score = 1.0), while suitability linearly decreased to zero at a cutoff of 50°.
 
@@ -175,7 +174,7 @@ Input variables, originally measured in diverse units (degrees, meters, binary p
 ### Weighting and Aggregation
 Weights were assigned to each criterion based on their relative importance to wolf ecology, summing to a total of 1.0. The weights were distributed as follows: 
 
-- *Disturbance (Security):* 0.40 (Dominant factor)
+- *Disturbance:* 0.40
 - *Forest Cover:* 0.25
 - *Prey Availability:* 0.15
 - *Elevation:* 0.10
@@ -190,22 +189,22 @@ To assess the potential for human-wildlife conflict, specifically regarding live
 **Data Classification:** Agricultural zones were extracted from the Arealstatistik dataset and classified into two risk categories based on livestock vulnerability:
 
 - *High Risk (Sheep Alpages):* Areas designated as sheep pastures (Code 49). Sheep are particularly vulnerable to wolf predation, representing the highest conflict potential.
-- *Medium Risk (General Pastures):* Areas including home pastures, scrub pastures, and general alpine meadows (Codes 43–48), typically used for cattle or mixed grazing, which represent a lower but significant conflict risk.
+- *Medium Risk (General Pastures):* Areas including home pastures, scrub pastures, and general alpine meadows (Codes 43-48), typically used for cattle or mixed grazing, which represent a lower but significant conflict risk.
 
-**Spatial Modeling:** Since the land use data were point-based, a buffer of 200 meters was applied to all pasture points to simulate realistic grazing ranges. A conflict zone was defined not merely by the presence of livestock, but by the overlap of these grazing buffers with suitable wolf habitat. A threshold of HSI > 0.50 applied to this overlap. This threshold was deliberately set lower than the core habitat definition for the two scenarios (0.60) to account for the mobility of wolves, who frequently traverse sub-optimal habitats while foraging. Adopting this precautionary principle ensures that pastures located in marginal but accessible areas are included in the risk assessment, whereas areas in completely unsuitable habitat (e.g., dense urban centers or extreme slopes) remain excluded.
+**Spatial Modeling:** Since the land use data were point-based, a buffer of 200 meters was applied to all pasture points to simulate realistic grazing ranges. A conflict zone was defined not merely by the presence of livestock, but by the overlap of these grazing buffers with suitable wolf habitat. A threshold of HSI ≥ 0.50 applied to this overlap. This threshold was deliberately set lower than the core habitat definition for the two scenarios (0.60) to account for the mobility of wolves, who frequently traverse sub-optimal habitats while foraging. Adopting this precautionary principle ensures that pastures located in marginal but accessible areas are included in the risk assessment, whereas areas in completely unsuitable habitat (e.g., dense urban centers or extreme slopes) remain excluded.
 
 
 ## Scenario Definition and Spatial Analysis
 Finally, two distinct suitability scenarios were derived to quantify the spatial trade-off between maximizing ecological potential and minimizing social conflict.
 
-**Scenario 1: Potential Core Habitats:** This scenario identifies all areas that meet the biological requirements of the species, regardless of proximity to human infrastructure. It is defined as any area with an HSI score ≥ 0.60.
+**Scenario 1: Potential Core Habitats:** This scenario identifies all areas that meet the biological requirements, regardless of conflict zones. It is defined as any area with an HSI score ≥ 0.60.
 
-**Scenario 2: Conflict-Minimized Core Habitats:** This scenario restricts the suitable habitat to areas that are both biologically viable and socially acceptable. It applies the same biological threshold (HSI ≥ 0.60) but enforces strict exclusion criteria:
+**Scenario 2: Conflict-Minimized Core Habitats:** This scenario restricts the suitable habitat to areas that are both biologically viable and minimize conflict. It applies the same biological threshold (HSI ≥ 0.60) but enforces strict exclusion criteria:
 
 - *Exclusion of Conflict Zones:* All identified High and Medium risk conflict zones were removed.
-- *Enhanced Safety Buffers:* Stricter safety distances were applied, excluding all areas within 750 meters of settlements and 250 meters of major roads, to ensure a high degree of separation between wolf territories and human activity.
+- *Enhanced Safety Buffers:* Additional safety distances were applied, excluding all areas within 750 meters of settlements and 250 meters of major roads, to ensure a high degree of separation between wolf territories and human activity.
 
-For both scenarios, a minimum patch size filter of 1000 pixels (equivalent to 10 hectares) was applied to remove fragmented, non-viable habitat patches (despeckling). The resulting areas were calculated in square kilometers to assess the reduction in available habitat imposed by social constraints.
+For both scenarios, a minimum patch size filter of 1000 pixels (equivalent to 10 hectares) was applied to remove very small small, fragmented habitat patches (despeckling). The resulting areas were calculated in square kilometers to assess the reduction in available habitat imposed by social constraints.
 
 
 ## Visualizations and Dashboard
@@ -223,18 +222,28 @@ The results of the analysis were synthesized into both static and interactive vi
 # Results
 
 ## Habitat Suitability Index (HSI)
-The Weighted Linear Combination (WLC) model produced a continuous Habitat Suitability Index (HSI) for the entire Canton of Graubünden. The visualization of the suitability scores (@fig-hsi-map) reveals a distinct spatial pattern driven by the topography and the distribution of anthropogenic infrastructure. Highly suitable areas (HSI > 0.8) are concentrated in the forested, mountainous regions away from the main valley floors. The major valleys, such as the Rhine Valley (Chur to Disentis) and the Inn Valley (Engadin), appear as distinct barriers with low suitability scores due to high settlement density and major transit routes.
+The Weighted Linear Combination (WLC) model produced a continuous Habitat Suitability Index (HSI) for the entire Canton of Graubünden. The calculated suitability scores in the study area range from a minimum of ~0.18 to a maximum of ~0.85. To enhance visual contrast and interpretability, the color ramp is scaled to the range 0.15 - 0.85 rather than the theoretical 0-1 interval. The visualization of the suitability scores (@fig-hsi-map) reveals a distinct spatial pattern driven by the topography and the distribution of anthropogenic infrastructure. Highly suitable areas are concentrated in the forested, mountainous regions away from the main valley floors. The major valleys, such as the Rhine Valley (Chur to Disentis) and the Inn Valley (Engadin), appear as distinct barriers with low suitability scores due to high settlement density and major transit routes.
 
-![Habitat Suitability Index (HSI) Map of Graubünden, illustrating spatial variation in suitability scores from 0.15 (unsuitable) to 0.85 (highly suitable). High suitability areas are predominantly located in remote, forested regions away from human infrastructure.](images/habitat_suitability_map.svg){#fig-hsi-map width="90%"}
+![Habitat Suitability Index (HSI) Map of Graubünden, illustrating spatial variation in suitability scores from 0.15 (unsuitable, red) to 0.85 (highly suitable, blue). High suitability areas are predominantly located in remote, forested regions away from human infrastructure.](images/habitat_suitability_map.svg){#fig-hsi-map width="90%"}
 
 
 ## Conflict Zones
+The conflict analysis identified specific zones where moderate to high habitat suitability (score ≥ 0.5) overlaps with vulnerable agricultural use. Figure 3 illustrates the spatial distribution of these conflict areas.
 
+- **Medium Risk Zones (Brown):** These zones, representing cattle and general pastures within suitable wolf habitats, cover a large amount of the potential habitat areas, particularly in the mid-altitude regions.
+- **High Risk Zones (Black):** These areas, representing sheep alpages located within suitable wolf habitats, are more concentrated but pose a significant risk due to the high vulnerability of sheep to predation.
 
 ![Conflict Zones Map, highlighting High Risk (Black) and Medium Risk (Brown) agricultural areas overlapping with at least moderately suitable wolf habitat (HSI > 0.50).](images/potential_conflict_zones.svg){#fig-conflict-zones width="90%"}
 
 
 ## Scenario Analysis
+The spatial analysis of the two defined scenarios visualized in @fig-scenario-wolf and @fig-scenario-human revealed a substantial trade-off between biological potential and safety constraints.
+
+**Scenario 1: Potential Core Habitats**
+This scenario, which considers only biological requirements (HSI > 0.60) without regard for agricultural conflict, identified a total suitable habitat area of 2225 km^2^. As shown in @fig-scenario-wolf, theses habitats cover a significant portion of the canton and are primarily located in dense forested areas with low human disturbance.
+
+**Scenario 2: Conflict-Minimized Core Habitats**
+When applying the conflict exclusion criteria and enhanced safety buffers, the available suitable habitat was drastically reduced to 603 km^2^. As illustrated in @fig-scenario-human, the remaining core habitats are much more fragmented and isolated, primarily located in more remote alpine regions. This represents a reduction of approximately 73% in suitable habitat area compared to scenario 1, highlighting the significant impact of human-wildlife conflict considerations on habitat availability.
 
 ![Potential Core Habitats Scenario Map, showing all areas with HSI ≥ 0.60 (cyan). These areas represent the potentialcore habitats with high suitability for wolves disregarding conflict zones.](images/potential_core_habitats_map.svg){#fig-scenario-wolf width="90%"}
 
@@ -242,18 +251,38 @@ The Weighted Linear Combination (WLC) model produced a continuous Habitat Suitab
 
 
 # Discussion
+The results of this Multi-Criteria Analysis highlight the critical tension between the biological potential for wolf recovery in Graubünden and the sociopolitical constraints imposed by human land use. The analysis confirms that while the Canton offers extensive ecological suitability for wolves, the realization of this potential is severely limited by the requirement for conflict-free coexistence.
 
+## Interpretation of Habitat Availability and Fragmentation
+The most significant finding of this study is the 73% reduction in suitable habitat when moving from a biological suitability model (Scenario 1) to a socially constrained model (Scenario 2). While the "Potential Core Habitats" scenario identifies 2225 km^2^ of suitable land, sufficient to support multiple wolf packs, the "Conflict-Minimized Core Habitats" scenario leaves only 603 km^2^.
+
+Crucially, the impact is not just in total area, but in spatial configuration. As observed in the results, the "Conflict-Minimized Core Habitats" scenario results in a highly fragmented landscape. The resulting map shows that there are only two large, suitable, conflict-free areas to the east and south-east of Zernez. Wolves are territorial animals with home ranges often exceeding 100-300 km^2^ in the Alps [@Glenz2001]. The small, isolated patches identified in Scenario 2 are insufficient to support stable pack dynamics. This suggests that a management strategy based on the strict avoidance of all conflict zones and wide safety buffers is incompatible with a viable wolf population. Realistic coexistence will require accepting a degree of overlap between wolf territories and agricultural zones, necessitating active herd protection measures rather than spatial segregation.
+
+## Validation with current Distribution and Literature
+The robustness of the "Potential Core Habitats" model (Scenario 1) is supported by comparisons with both scientific literature and current field observations.
+
+**Comparison with Alpine-Scale Models:** The spatial patterns of suitability identified in this study show a strong correlation with the large-scale predictive model for the Alpine range developed by Falcucci et al. [@Falcucci2013]. Both models identify the Surselva, the Calanda massif, and mountainous areas east of Zernez as  suitable habitats. However, a visual comparison reveals that the model of this project's local-scale analysis depicts a much more fragmented landscape than Falcucci’s regional model. This discrepancy is likely attributable to the higher resolution of our input data, which captures finer-scale barriers such as minor roads and settlement sprawl that are generalized in coarser, pan-Alpine studies.
+
+**Validation with Observed Wolf Pack Locations:**
+A comparison with the [official 2026 distribution map of the 12 known wolf packs in Graubünden](https://www.gr.ch/DE/institutionen/verwaltung/diem/ajf/grossraubtiere/Seiten/Aktuelle-Situation.aspx) provides a critical real-world validation. The observed pack territories largely overlap with the areas identified as suitable in our biological model (Scenario 1), confirming the model's predictive power regarding ecological requirements. However, these real-world territories are not restricted to the "Conflict-Minimized" zones identified in Scenario 2. The packs successfully inhabit areas that the second scenario excluded due to conflict risks or proximity to infrastructure. This observation reinforces the conclusion that the "Conflict-Minimized" scenario is an idealized theoretical construct. In reality, wolves in Graubünden demonstrate a higher tolerance for anthropogenic structures and conflict potential than the strict parameters of Scenario 2 allow, further emphasizing that coexistence is defined by management of conflict rather than spatial avoidance of it.
+
+## Limitations and Uncertainties
+While the model provides robust spatial insights, several limitations must be considered. First, the "Prey Availability" criterion relied on the location of alpine pastures as a proxy for wild ungulate presence (deer, chamois) and livestock. While summer grazing livestock is a food source, the primary prey base consists of wild game, whose density was not directly modeled due to data limitations.
+
+Second, the model represents a "static" view of the landscape, largely reflecting summer conditions (when pastures are active). It does not account for seasonal dynamics, such as snow depth, which forces both wild prey and wolves into lower elevations during winter. This seasonal migration brings wolves closer to human settlements, potentially increasing conflict risks that are not fully captured in a static model. Future iterations could improve accuracy by incorporating seasonal snow cover data and dynamic prey density maps.
 
 ## Conclusion and Outlook
+This project successfully developed a reproducible, Python-based workflow to model wolf habitat suitability in Graubünden. The findings demonstrate that biologically suitable habitat is abundant, but socially acceptable habitat is scarce and fragmented. The interactive map developed in this study provides a valuable tool for stakeholders to visualize these trade-offs. Ultimately, the results suggest that the long-term presence of the wolf in Graubünden will depend not on finding "conflict-free" space, but on managing the inevitable overlap between human agricultural activity and ecological reality.
 
+Given the identified limitations, future iterations of this model should aim to incorporate dynamic seasonal variables and other additional criterias. Specifically, integrating snow depth data would allow for a more accurate assessment of winter habitat suitability and potential conflict hotspots during the cold season, when predator-prey dynamics shift towards valley floors. Furthermore, replacing the proxy-based prey layer with actual prey density data from a separate habitat data for relevant animals would significantly refine the ecological component of the model. Finally, the "social tolerance" parameters could be improved by incorporating stakeholder feedback directly, moving from theoretical buffer distances to values negotiated with local agricultural and conservation interest groups.
 
 
 # Statement of Reproducibility
-All code developed for data processing, model training, and deployment is fully available in the project's [GitHub repository](https://github.com/klaveflo/Wolf_habitat_suitability_Graubunden). While the specific ground truth data provided by Zurich Airport is confidential and cannot be publicly shared, the code structure allows for the reproduction of the workflow using similar datasets. The [satellite](https://browser.dataspace.copernicus.eu/), [official survey and fire brigade responsibility area](https://geo.zh.ch/) data are all openly available on the corresponding websites. 
+All code developed for data processing, MCA modeling, and dashboard deployment is fully available in the project's [GitHub repository](https://github.com/klaveflo/Wolf_habitat_suitability_Graubunden). While the specific raw geospatial data (SwissTLM3D, swissALTI3D) cannot be redistributed directly due to licensing restrictions and data size, the code structure allows for the reproduction of the workflow using the standard datasets available from Swisstopo and the Swiss Federal Statistical Office. The source data can be obtained via [swisstopo](https://www.swisstopo.admin.ch/de) and [geocat.ch](https://www.geocat.ch/).
 
-To ensure reproducibility, maintainability, and simple reusability, set seeds were used and the codebase was refactored into documented, modular functions. This prevents code duplication and allows specific steps, such as the temporal triplet generation or the model application to be reused independently. Key configuration variables and hard-to-tune parameters (e.g., temporal window sizes, cloud probability thresholds, features to use) are declared at the top of the notebooks to facilitate adaptation to new research questions.
+To ensure reproducibility, maintainability, and simple reusability, the codebase was refactored into documented, modular scripts. This prevents code duplication and allows specific steps, such as the rasterization of vector features, the calculation of suitability scores, or the scenario generation, to be reused independently. Key configuration variables and model parameters (e.g., criteria weights, fuzzy logic inflection points, and safety buffer distances) are declared at the top of the scripts to facilitate adaptation to new research questions.
 
-Project version control was managed via GitHub. All computational tasks, including data preprocessing and model training, were optimized to run on standard local hardware.
+Project version control was managed via GitHub. All computational tasks, including data preprocessing and spatial analysis, were optimized to run on standard local hardware using open-source Python libraries.
 
 
 # References {#sec-refs}
@@ -267,11 +296,4 @@ Project version control was managed via GitHub. All computational tasks, includi
 
 {{< list-of-figures >}}
 
-# List of tables {.unnumbered}
-
-{{< list-of-tables >}}
-
 :::
-
-# Appendix {.unnumbered}
-
