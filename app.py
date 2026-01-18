@@ -7,7 +7,7 @@ import json
 
 # --- PAGE CONFIGURATION ---
 st.set_page_config(
-    page_title="Wolf Habitat Graubünden",
+    page_title="Wolf Habitat Analysis for Graubünden",
     page_icon="🐺",
     layout="wide",
     initial_sidebar_state="collapsed" # Hide sidebar by default for cleaner look
@@ -140,7 +140,7 @@ def create_map():
 
 # --- MAIN LAYOUT ---
 
-st.title("Wolf Habitat Analysis Graubünden")
+st.title("Wolf Habitat Analysis for Graubünden")
 
 # --- PROJECT DESCRIPTION (ABOUT) ---
 with st.expander("ℹ️ About this Project & Methodology", expanded=False):
