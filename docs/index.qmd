@@ -1,5 +1,5 @@
 ---
-title: "Wolf Habitat Analysis in Graubünden"
+title: "Wolf Habitat Analysis for Graubünden"
 subtitle: "A Multi-Criteria Analysis Approach for Conflict-Sensitive Habitat Suitability Modeling"
 institut: "Institute for Environment and Natural Resources"
 keywords: "Wolf, Habitat Suitability, Graubünden, GIS, Multi-Criteria Analysis, Human-Wildlife Conflict, Spatial Modeling"
