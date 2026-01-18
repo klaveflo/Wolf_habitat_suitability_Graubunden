@@ -71,7 +71,7 @@ Place the following datasets into a seperate data/ folder (ensure filenames matc
   - Arealstatistik (Land Use)
  
 4. **Run the Analysis**  
-Execute the scripts in their numbered order. You can easily adjust parameters at the top of the relevant scripts to comapre how the results change.
+Execute the scripts in their numbered order. You can easily adjust parameters at the top of the relevant scripts to compare how the results change.
 
 5. **Run Dashboard locally (Optional)**  
 To analyze how different parameters change the resulting map you can test the interactive map on your local machine.
