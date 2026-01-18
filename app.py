@@ -1,5 +1,6 @@
 import streamlit as st
 import folium
+import geopandas as gpd
 from streamlit_folium import st_folium
 from pathlib import Path
 import json
@@ -62,6 +63,14 @@ def load_bounds(filename):
         return None
     with open(path, 'r') as f:
         return json.load(f)
+    
+@st.cache_data
+def load_geojson(filename):
+    path = DATA_DIR / filename
+    if not path.exists(): 
+        return None
+    gdf = gpd.read_file(path)
+    return gdf[['geometry']]   
 
 def add_png_layer(m, filename_base, layer_name, opacity=0.7, show=False, group=None):
     """Helper to add a PNG layer to the map."""
@@ -71,7 +80,6 @@ def add_png_layer(m, filename_base, layer_name, opacity=0.7, show=False, group=N
     if img_path.exists():
         bounds = load_bounds(bounds_path)
         if bounds:
-            # We use FeatureGroup to allow cleaner layer control grouping if needed
             fg = folium.FeatureGroup(name=layer_name, show=show)
             folium.raster_layers.ImageOverlay(
                 image=str(img_path),
@@ -87,7 +95,7 @@ def create_map():
         location=[46.65, 9.6], 
         zoom_start=9, 
         tiles=None,
-        control_scale=True
+        control_scale=True 
     )
 
     # 1. Base Map: Swisstopo Grey
@@ -99,18 +107,31 @@ def create_map():
         control=True
     ).add_to(m)
 
-    # 2. Add All Layers (Controlled via internal LayerControl)
-    
+    # 2. Cantonal Boundary (Always visible, no control)
+    boundary = load_geojson("canton_boundary.geojson")
+    if boundary is not None:
+        folium.GeoJson(
+            boundary,
+            name="Cantonal Boundary",
+            style_function=lambda x: {
+                'color': 'black', 
+                'weight': 2, 
+                'fillOpacity': 0, # Transparent fill
+            },
+            control=False # Hides it from the layer control widget
+        ).add_to(m)
+
+    # 3. Add All Layers (Controlled via internal LayerControl)
     # Background: Habitat Suitability (Default: Visible)
     add_png_layer(m, "habitat_overlay", "Habitat Suitability Index", opacity=0.8, show=True)
 
     # Scenarios (Default: Hidden)
-    add_png_layer(m, "scenario_wolf", "Scenario: Best Case Wolf", opacity=0.6, show=False)
-    add_png_layer(m, "scenario_human", "Scenario: Best Case Human", opacity=0.6, show=False)
+    add_png_layer(m, "scenario_potential_core_habitats", "Scenario: Potential Core Habitats", opacity=0.7, show=False)
+    add_png_layer(m, "scenario_conflict_minimized_core_habitats", "Scenario: Conflict-Minimized Core Habitats", opacity=0.7, show=False)
 
     # Conflicts (Default: Hidden)
-    add_png_layer(m, "conflict_medium", "Risk: Medium (Pastures)", opacity=0.6, show=False)
-    add_png_layer(m, "conflict_high", "Risk: High (Sheep Alpages)", opacity=0.6, show=False)
+    add_png_layer(m, "conflict_medium", "Risk: Medium (Pastures)", opacity=0.7, show=False)
+    add_png_layer(m, "conflict_high", "Risk: High (Sheep Alpages)", opacity=0.7, show=False)
 
     # Layer Control (collapsed=False makes it visible immediately)
     folium.LayerControl(collapsed=False).add_to(m)
@@ -139,12 +160,12 @@ with st.expander("ℹ️ About this Project & Methodology", expanded=False):
     * **Disturbance:** Strong avoidance of settlements and heavy traffic roads (Distance decay).
 
     ##### Scenarios:
-    * **Best Case Wolf:** Shows great habitat potential (suitability score > 0.6).
-    * **Best Case Human:** Restricts the wolf to areas with minimal conflict potential (suitability score > 0.6, far from settlements/livestock grazing).
+    * **Potential Core Habitats:** Shows great habitat potential (suitability score > 0.6).
+    * **Conflict-Minimized Core Habitats:** Restricts the wolf to areas with minimal conflict potential (suitability score > 0.6, far from settlements/livestock grazing).
                 
     ##### Visualization & Color Scale:
     The map uses a **Red-Yellow-Blue** scale. To enhance visual contrast and interpretability, the color ramp is scaled to the **range 0.15 - 0.85** rather than the theoretical 0-1 interval.
-    * **Actual Scores:** The calculated suitability scores in the study area range from a minimum of **~0.20** to a maximum of **~0.85**.
+    * **Actual Scores:** The calculated suitability scores in the study area range from a minimum of **~0.18** to a maximum of **~0.85**.
     * **Interpretation:** **Red** represents the relatively lowest suitability found locally, while **Blue** represents the best habitat available within the canton.
         
     <br>                       
@@ -184,14 +205,14 @@ with col_legend:
         <div class="legend-item">
             <div class="color-box" style="background-color: #00FFFF; opacity: 0.7;"></div>
             <div>
-                <b>Best Case Wolf</b><br>
-                <small>Habitat potential (suitability score > 0.6) (Cyan)</small></div>
+                <b>Potential Core Habitats</b><br>
+                <small>Suitability score > 0.6 (Cyan)</small></div>
         </div>
         <div class="legend-item">
             <div class="color-box" style="background-color: #FF00FF; opacity: 0.7;"></div>
             <div>
-                <b>Best Case Human</b><br>
-                <small>Conflict-minimized core areas (suitability score > 0.6) (Magenta)</small></div>
+                <b>Conflict-Minimized Core Habitats</b><br>
+                <small>Suitability score > 0.6 and no conflicts (Magenta)</small></div>
         </div>
     </div>
     """, unsafe_allow_html=True)
@@ -204,13 +225,13 @@ with col_legend:
             <div class="color-box" style="background-color: #000000; opacity: 0.8;"></div>
             <div>
                 <b>High Risk</b><br>
-                <small>Sheep Alpages in good habitat (Black)</small></div>
+                <small>Sheep Alpages in suitable habitat (Black)</small></div>
         </div>
         <div class="legend-item">
             <div class="color-box" style="background-color: #8B4513; opacity: 0.8;"></div>
             <div>
                 <b>Medium Risk</b><br>
-                <small>General pastures in good habitat (Brown)</small></div>
+                <small>General pastures in suitable habitat (Brown)</small></div>
         </div>
     </div>
     """, unsafe_allow_html=True)
